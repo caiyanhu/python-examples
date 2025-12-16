@@ -1,0 +1,33 @@
+apiVersion: apisix.apache.org/v2alpha1
+kind: ApisixRoute
+metadata:
+  name: he3db-distributed-fe-order-apisix
+  namespace: sjkcpb-he3db-d
+spec:
+  http:
+    - name: gray
+      priority: 4
+      match:
+        hosts:
+          - he3db-d-order.he3db.internal
+        paths:
+          - /*
+        exprs:
+          - subject:
+              scope: Header
+              name: user_id
+            op: RegexMatch
+            value: CIDC-U-73e138ac57f04ebb89fd2ff0ccd5191e|CIDC-U-c65f65f4bb204fd7ae52c3c6e77f76ae|CIDC-U-7aef38d045c643ed9fd0e99b2f413260|CIDC-U-2e5d5fe49faa4d8d94aaefbba6cb77d4|CIDC-U-8e50e89bdf0c4e35b2a09b5990552e00|CIDC-U-e467f6d725b941fea40f3ea42a841b8b|CIDC-U-a7f0bebb16e84ddbb3ae9fc57c48b531|CIDC-U-f0943923990745d59d290a4957b8b5eb|CIDC-U-05a3cff932a34c1fb063c408192f4074|CIDC-U-d469202f8c3a436995754ade89264546
+      backends:
+        - serviceName: he3db-distributed-fe-order-gray-service
+          servicePort: 31016
+    - name: release
+      priority: 3
+      match:
+        hosts:
+          - he3db-d-order.he3db.internal
+        paths:
+          - /*
+      backends:
+        - serviceName: he3db-distributed-fe-order-release-service
+          servicePort: 31016
